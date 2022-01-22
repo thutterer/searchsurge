@@ -1,18 +1,22 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+    <n-space justify="center">
+      <img alt="Vue logo" src="../assets/logo.png" />
+    </n-space>
+    <Search />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
+import { NSpace } from "naive-ui";
+import Search from "@/components/Search.vue"; // @ is an alias to /src
 
 export default defineComponent({
   name: "Home",
   components: {
-    HelloWorld,
+    NSpace,
+    Search,
   },
 });
 </script>
