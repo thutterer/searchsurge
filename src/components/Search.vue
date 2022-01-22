@@ -1,27 +1,37 @@
 <template>
-  <n-space vertical class="search-space">
-    <n-input
-      v-model:value="query"
-      clearable
-      type="text"
-      size="large"
-      placeholder="Search"
-      @keyup.enter="search"
-    />
-    <n-space>
+  <n-space vertical>
+    <n-space justify="space-between" class="search-bar">
+      <n-select
+        v-model:value="searchUrl"
+        :options="searchEngines"
+        :default-value="searchEngines[0].label"
+        size="large"
+      />
+      <n-input
+        v-model:value="query"
+        clearable
+        type="text"
+        size="large"
+        placeholder="Search"
+        @keyup.enter="search"
+      />
       <n-button type="primary" @click="search" size="large">Search</n-button>
-      <n-switch v-model:value="useSiteFilter">
-        <template #checked>Filter sites</template>
-        <template #unchecked>Unfiltered</template>
-      </n-switch>
-
-      <n-switch v-model:value="useDuck">
-        <template #checked>duck.com</template>
-        <template #unchecked>google.com</template>
-      </n-switch>
     </n-space>
 
-    <n-dynamic-input v-model:value="sites" placeholder="example.com" />
+    <n-slider
+      v-model:value="filter"
+      :marks="marks"
+      step="mark"
+      :tooltip="false"
+    />
+
+    <n-card v-if="filter === 50" title="Blocked sites">
+      <n-dynamic-input v-model:value="blockedSites" placeholder="example.com" />
+    </n-card>
+
+    <n-card v-if="filter === 100" title="Allowed sites">
+      <n-dynamic-input v-model:value="allowedSites" placeholder="example.com" />
+    </n-card>
 
     <code>{{ fullQuery }}</code>
   </n-space>
@@ -29,37 +39,67 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { NButton, NDynamicInput, NInput, NSpace, NSwitch } from "naive-ui";
+import {
+  NButton,
+  NCard,
+  NDynamicInput,
+  NInput,
+  NSelect,
+  NSlider,
+  NSpace,
+} from "naive-ui";
 
 export default defineComponent({
   components: {
     NButton,
+    NCard,
     NDynamicInput,
     NInput,
+    NSelect,
+    NSlider,
     NSpace,
-    NSwitch,
   },
 
   data: function () {
     return {
       useSiteFilter: true,
-      useDuck: true,
+      filter: 0,
+      marks: { 0: "All", 50: "Block", 100: "Allow" },
       query: "",
-      sites: ["stackoverflow.com", "github.com"],
+      allowedSites: [""],
+      blockedSites: [""],
+      searchEngines: [
+        {
+          label: "DuckDuckGo",
+          value: "duck.com",
+        },
+        {
+          label: "Google",
+          value: "google.com/search",
+        },
+      ],
+      searchUrl: "duck.com",
     };
   },
 
   computed: {
     fullQuery(): string {
       if (this.query.length === 0) return "";
-      const siteFilters = this.useSiteFilter
-        ? `(${this.sites.map((site) => `site:${site}`).join(" | ")})`
-        : "";
-      return `${this.query} ${siteFilters}`;
-    },
 
-    searchUrl(): string {
-      return this.useDuck ? "duck.com/" : "google.com/search";
+      let siteFilters = "";
+      switch (this.filter) {
+        case 50:
+          siteFilters = `${this.blockedSites
+            .map((site) => `-site:${site}`)
+            .join(" ")}`;
+          break;
+        case 100:
+          siteFilters = `(${this.allowedSites
+            .map((site) => `site:${site}`)
+            .join(" | ")})`;
+      }
+
+      return `${this.query} ${siteFilters}`;
     },
   },
 
@@ -70,20 +110,37 @@ export default defineComponent({
   },
 
   watch: {
-    sites(newSites) {
-      localStorage.setItem("sites", newSites);
+    allowedSites(newAllowedSites) {
+      localStorage.setItem("allowedSites", newAllowedSites);
     },
   },
 
   beforeMount() {
-    this.sites = (localStorage.getItem("sites") || "stackoverflow.com").split(",");
+    this.allowedSites = (
+      localStorage.getItem("allowedSites") || "stackoverflow.com"
+    ).split(",");
+
+    this.blockedSites = (localStorage.getItem("blockedSites") || "")
+      .split(",")
+      .filter((entry) => entry.trim() != "");
   },
 });
 </script>
 
-<style scoped lang="scss">
-.search-space {
-  margin: 4rem auto;
-  max-width: 600px;
+<style lang="scss">
+.search-bar {
+  > * {
+    flex-grow: 1;
+  }
+  > :nth-child(2) {
+    flex-grow: 100;
+  }
+  > :nth-child(3) button {
+    width: calc(100% - 6px);
+  }
+}
+
+.n-slider .n-slider-marks .n-slider-mark {
+  color: #e8e8e8;
 }
 </style>
