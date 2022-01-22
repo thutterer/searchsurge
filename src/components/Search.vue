@@ -16,7 +16,13 @@
         placeholder="Search"
         @keyup.enter="search"
       />
-      <n-button type="primary" @click="search" size="large">Search</n-button>
+      <n-button
+        type="primary"
+        @click="search"
+        :disabled="query.length === 0"
+        size="large"
+        >Search</n-button
+      >
     </n-space>
 
     <n-slider
