@@ -2,8 +2,8 @@
   <div class="about">
     <h1>About this project</h1>
     <p>
-      SearchSurge makes it easy to tweak your search engine queries with
-      operators like <code>site:stackoverflow.com</code>.
+      SearchSurge makes it easy to tweak your search results with operators like
+      <code>(site:stackoverflow.com || site:github.com)</code>.
     </p>
     <p>
       Chaining many of these operators gives you search superpowers, but it's
@@ -24,10 +24,15 @@
     </p>
 
     <h2>Where can I learn more?</h2>
-    <p>You can find the <a href="https://github.com/thutterer/searchsurge">source code</a> on GitHub.</p>
+    <p>
+      You can find the
+      <a href="https://github.com/thutterer/searchsurge">source code</a> on
+      GitHub.
+    </p>
     <p>
       If you want to learn more about advanced search operators, checkout the
-      <a href="https://youtube.com">video</a> that inspired this project.
+      <a href="https://www.youtube.com/watch?v=cEBkvm0-rg0">video</a> that
+      inspired this project.
     </p>
   </div>
 </template>
