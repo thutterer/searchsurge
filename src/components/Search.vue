@@ -9,6 +9,7 @@
       />
       <n-input
         v-model:value="query"
+        autofocus
         clearable
         type="text"
         size="large"
