@@ -7,15 +7,20 @@
         :default-value="searchEngines[0].label"
         size="large"
       />
-      <n-input
-        v-model:value="query"
-        autofocus
-        clearable
-        type="text"
-        size="large"
-        placeholder="Search"
-        @keyup.enter="search"
-      />
+
+      <form :action="searchUrlWithQuery" method="get">
+        <n-input
+          v-model:value="query"
+          autofocus
+          clearable
+          type="text"
+          size="large"
+          placeholder="Search"
+          @keyup.enter="search"
+        />
+        <input type="hidden" name="q" v-model="fullQuery" />
+      </form>
+
       <n-button
         type="primary"
         tag="a"
