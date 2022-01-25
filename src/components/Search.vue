@@ -18,7 +18,8 @@
       />
       <n-button
         type="primary"
-        @click="search"
+        tag="a"
+        :href="searchUrlWithQuery"
         :disabled="query.length === 0"
         size="large"
         >Search</n-button
@@ -39,8 +40,6 @@
     <n-card v-if="filter === 100" title="Allowed sites">
       <n-dynamic-input v-model:value="allowedSites" placeholder="example.com" />
     </n-card>
-
-    <code>{{ fullQuery }}</code>
   </n-space>
 </template>
 
@@ -108,11 +107,11 @@ export default defineComponent({
 
       return `${this.query} ${siteFilters}`;
     },
-  },
 
-  methods: {
-    search() {
-      window.open(`https://${this.searchUrl}?q=${this.fullQuery}`);
+    searchUrlWithQuery(): string {
+      if (this.query.length === 0) return "#";
+
+      return `https://${this.searchUrl}?q=${this.fullQuery}`;
     },
   },
 
