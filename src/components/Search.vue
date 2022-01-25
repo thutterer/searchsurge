@@ -124,6 +124,9 @@ export default defineComponent({
     allowedSites(newAllowedSites) {
       localStorage.setItem("allowedSites", newAllowedSites);
     },
+    blockedSites(newBlockedSites) {
+      localStorage.setItem("blockedSites", newBlockedSites);
+    },
   },
 
   beforeMount() {
